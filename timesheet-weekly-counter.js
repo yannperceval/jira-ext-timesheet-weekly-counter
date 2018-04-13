@@ -4,7 +4,7 @@
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yannperceval)
 // @copyright    2018, Yann Roseau (https://github.com/yannperceval)
-// @licence      MIT, https://github.com/yannperceval/jira-extension/blob/master/LICENSE
+// @license      MIT; https://github.com/yannperceval/jira-extension/blob/master/LICENSE
 // @match        *timesheet.jspa*
 // @grant        none
 // @run-at       document-end
