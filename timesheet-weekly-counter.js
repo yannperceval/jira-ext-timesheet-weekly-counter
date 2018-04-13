@@ -3,10 +3,12 @@
 // @version      0.1
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yannperceval)
-// @licence      MIT
+// @copyright    2018, Yann Roseau (https://github.com/yannperceval)
+// @licence      MIT, https://github.com/yannperceval/jira-extension/blob/master/LICENSE
 // @match        *timesheet.jspa*
 // @grant        none
 // @run-at       document-end
+// @updateURL    https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
 // ==/UserScript==
 
 var $tempoTable = $('#tempo-table');
