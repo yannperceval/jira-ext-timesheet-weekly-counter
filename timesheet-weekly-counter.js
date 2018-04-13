@@ -5,7 +5,7 @@
 // @author       Yann Roseau (https://github.com/yannperceval)
 // @copyright    2018, Yann Roseau (https://github.com/yannperceval)
 // @license      MIT; https://github.com/yannperceval/jira-extension/blob/master/LICENSE
-// @match        *timesheet.jspa*
+// @include      https://jira*.kaliop.net/*
 // @grant        none
 // @run-at       document-end
 // @updateURL    https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
