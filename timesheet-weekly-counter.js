@@ -8,13 +8,14 @@
 // @include      https://jira*.kaliop.net/*
 // @grant        none
 // @run-at       document-end
+// @downloadURL  https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
 // @updateURL    https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
 // ==/UserScript==
 
 var $tempoTable = $('#tempo-table');
 if ($tempoTable.length) {
 
-  $('body').append(' \
+  $('body').append('<style>\
         .day { position: relative; } \
         .weekHours { \
           background-color: #3b73af; \
@@ -31,7 +32,7 @@ if ($tempoTable.length) {
           opacity: 0; \
           display: none; \
         } \
-    ');
+    </style>');
 
   var $headerRows = $tempoTable.find('.header-row');
   $headerRows.each(function () {
