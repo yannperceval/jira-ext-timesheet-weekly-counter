@@ -24,9 +24,10 @@ if ($tempoTable.length) {
           position:absolute; \
           right: 0; \
           top: 0; \
-          line-height: 0.25em; \
+          line-height: 0.5em; \
           padding: 0.5em 0.5em; \
           border-radius: 0 0 0 0.75em; \
+          text-shadow: 0 0 4px #0d0d0d6b; \
         } \
         .day:hover .weekHours { \
           opacity: 0; \
