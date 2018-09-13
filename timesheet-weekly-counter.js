@@ -12,7 +12,8 @@
 // @updateURL    https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
 // ==/UserScript==
 
-var $tempoTable = $('#tempo-table');
+var $tempoTable = $(".tempo-timesheet-table");
+
 if ($tempoTable.length) {
 
   $('body').append('<style>\
@@ -35,7 +36,7 @@ if ($tempoTable.length) {
         } \
     </style>');
 
-  var $headerRows = $tempoTable.find('.header-row');
+  var $headerRows = $tempoTable.find('.rowNormal');
   $headerRows.each(function () {
     var $days = $(this).find('.day');
     var count = 0;
