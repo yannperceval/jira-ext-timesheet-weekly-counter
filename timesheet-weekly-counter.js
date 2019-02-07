@@ -2,14 +2,14 @@
 // @name         Jira extension: timesheet weekly counter
 // @version      0.1
 // @description  Show a counter by project by week
-// @author       Yann Roseau (https://github.com/yannperceval)
-// @copyright    2018, Yann Roseau (https://github.com/yannperceval)
-// @license      MIT; https://github.com/yannperceval/jira-extension/blob/master/LICENSE
+// @author       Yann Roseau (https://github.com/yroseau)
+// @copyright    2018, Yann Roseau (https://github.com/yroseau)
+// @license      MIT; https://github.com/yroseau/jira-extension/blob/master/LICENSE
 // @include      https://jira*.kaliop.net/*
 // @grant        none
 // @run-at       document-end
-// @downloadURL  https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
-// @updateURL    https://raw.githubusercontent.com/yannperceval/jira-extension/master/timesheet-weekly-counter.js
+// @downloadURL  https://raw.githubusercontent.com/yroseau/jira-extension/master/timesheet-weekly-counter.js
+// @updateURL    https://raw.githubusercontent.com/yroseau/jira-extension/master/timesheet-weekly-counter.js
 // ==/UserScript==
 
 var $tempoTable = $(".tempo-timesheet-table");
