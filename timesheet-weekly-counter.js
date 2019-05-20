@@ -12,88 +12,96 @@
 // @updateURL    https://raw.githubusercontent.com/yroseau/jira-extension/master/timesheet-weekly-counter.js
 // ==/UserScript==
 
-var $tempoTableContainer = $('.tempo-report-container');
+$( document ).ready(function() {
     
-if ($tempoTableContainer.length) {
-  
-    $('body').append('<style>\
-        .weekHours { \
-          background-color: #3b73af; \
-          color: white; \
-          font-size: 0.75em; \
-          position:absolute; \
-          font-weight: bold; \
-          font-size: 0.9em; \
-          text-align: center; \
-          right: 0; \
-          top: 0; \
-          line-height: 3em; \
-          padding: auto; \
-        } \
-        .onWeekHours { \
-          opacity: 0.6 \
-        } \
-    </style>');
+    // setTimeout == j'ai honte.. mais vraiment pas le temps
+    setTimeout(function() {
 
-    var timeout = null
-    
-    function showWeeklyHours() {   
-    
-        var $cells = $tempoTableContainer.find('.public_fixedDataTable_footer .grid-cell');
-        var $c = $tempoTableContainer.find('.public_fixedDataTable_bodyRow .day-cell')
+        var $tempoTableContainer = $('.tempo-report-container');
 
-        var count = 0;
-        var numDay = 7;
-        var weekHours = 39;
+        if ($tempoTableContainer.length) {
 
-        $cells.each(function(index) {
+            $('body').append('<style>\
+                .weekHours { \
+                  background-color: #3b73af; \
+                  color: white; \
+                  font-size: 0.75em; \
+                  position:absolute; \
+                  font-weight: bold; \
+                  font-size: 0.9em; \
+                  text-align: center; \
+                  right: 0; \
+                  top: 0; \
+                  line-height: 3em; \
+                  padding: auto; \
+                } \
+                .onWeekHours { \
+                  opacity: 0.6 \
+                } \
+            </style>');
 
-            var hStr = $(this).text().trim();
+            var timeout = null
 
-            if ($c[index].classList.contains('holiday')) {
-                weekHours -= 7.8
+            function showWeeklyHours() {
+
+                var $cells = $tempoTableContainer.find('.public_fixedDataTable_footer .grid-cell');
+                var $c = $tempoTableContainer.find('.public_fixedDataTable_bodyRow .day-cell')
+
+                var count = 0;
+                var numDay = 7;
+                var weekHours = 39;
+
+                $cells.each(function(index) {
+
+                    var hStr = $(this).text().trim();
+
+                    if ($c[index].classList.contains('holiday')) {
+                        weekHours -= 7.8
+                    }
+
+                    if (hStr !== "") {
+                        var h = parseFloat(hStr);
+                        if (!isNaN(h)) {
+                            count += h;
+                        }
+                    }
+
+                    --numDay;
+
+                    if (count !== 0 && ($(this).is('.cell-last-day-of-week'))) {
+                        if (numDay === 0 && !$(this).find('.weekHours').length) {
+                            count = Math.round(count);
+                            $(this).append('<div class="weekHours">'+count+'<span class="onWeekHours"> / '+Math.round(weekHours)+'</span></div>');
+                        }
+                        count = 0;
+                        weekHours = 39;
+                        numDay = 7;
+                    }
+
+                })
+
             }
 
-            if (hStr !== "") {
-                var h = parseFloat(hStr);
-                if (!isNaN(h)) {
-                    count += h;
-                }
+            function startShowWeeklyHours() {
+                timeout = setTimeout(function() {
+                    if (timeout !== null) {
+                        clearTimeout(timeout)
+                    }
+                    showWeeklyHours()
+                    timeout = null
+                }, 300)
             }
-            
-            --numDay;
 
-            if (count !== 0 && ($(this).is('.cell-last-day-of-week'))) {
-                if (numDay === 0 && !$(this).find('.weekHours').length) {
-                    count = Math.round(count);
-                    $(this).append('<div class="weekHours">'+count+'<span class="onWeekHours"> / '+Math.round(weekHours)+'</span></div>');
-                }
-                count = 0;
-                weekHours = 39;
-                numDay = 7;
-            } 
+            function init() {
+                $tempoTableContainer.find('.fixedDataTableRowLayout_rowWrapper:not(:last-child)').bind("DOMSubtreeModified", function() {
+                    startShowWeeklyHours();
+                })
 
-        })
-        
-    }
-
-    function startShowWeeklyHours() {
-        timeout = setTimeout(function() {
-            if (timeout !== null) {
-                clearTimeout(timeout)
+                startShowWeeklyHours();
             }
-            showWeeklyHours()
-            timeout = null
-        }, 300)
-    }
-    
-    function init() {
-        $tempoTableContainer.bind("DOMSubtreeModified", function() {
-            startShowWeeklyHours();
-        })
-        
-        startShowWeeklyHours();
-    }
-    
-    init();
-}
+
+            init();
+        }
+
+    }, 1000)
+})
