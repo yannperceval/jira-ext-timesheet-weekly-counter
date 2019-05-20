@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Jira extension: timesheet weekly counter
-// @version      0.1
+// @version      0.2
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yroseau)
 // @copyright    2018, Yann Roseau (https://github.com/yroseau)
@@ -12,50 +12,88 @@
 // @updateURL    https://raw.githubusercontent.com/yroseau/jira-extension/master/timesheet-weekly-counter.js
 // ==/UserScript==
 
-// disable temporary the extension
+var $tempoTableContainer = $('.tempo-report-container');
+    
+if ($tempoTableContainer.length) {
+  
+    $('body').append('<style>\
+        .weekHours { \
+          background-color: #3b73af; \
+          color: white; \
+          font-size: 0.75em; \
+          position:absolute; \
+          font-weight: bold; \
+          font-size: 0.9em; \
+          text-align: center; \
+          right: 0; \
+          top: 0; \
+          line-height: 3em; \
+          padding: auto; \
+        } \
+        .onWeekHours { \
+          opacity: 0.6 \
+        } \
+    </style>');
 
-// var $tempoTable = $(".tempo-timesheet-table");
+    var timeout = null
+    
+    function showWeeklyHours() {   
+    
+        var $cells = $tempoTableContainer.find('.public_fixedDataTable_footer .grid-cell');
+        var $c = $tempoTableContainer.find('.public_fixedDataTable_bodyRow .day-cell')
 
-// if ($tempoTable.length) {
+        var count = 0;
+        var numDay = 7;
+        var weekHours = 39;
 
-//   $('body').append('<style>\
-//         .day { position: relative; } \
-//         .weekHours { \
-//           background-color: #3b73af; \
-//           color: white; \
-//           font-size: 0.75em; \
-//           position:absolute; \
-//           right: 0; \
-//           top: 0; \
-//           line-height: 0.5em; \
-//           padding: 0.5em 0.5em; \
-//           border-radius: 0 0 0 0.75em; \
-//           text-shadow: 0 0 4px #0d0d0d6b; \
-//         } \
-//         .day:hover .weekHours { \
-//           opacity: 0; \
-//           display: none; \
-//         } \
-//     </style>');
+        $cells.each(function(index) {
 
-//   var $headerRows = $tempoTable.find('.rowNormal');
-//   $headerRows.each(function () {
-//     var $days = $(this).find('.day');
-//     var count = 0;
-//     var length = $days.length;
-//     $days.each(function (index) {
-//       var hStr = $(this).text().trim();
-//       if (hStr !== "") {
-//         var h = parseFloat(hStr);
-//         if (!isNaN(h)) {
-//           count += h;
-//         }
-//       }
-//       if (count !== 0 && ($(this).is('.tt-end-of-week') || index === length - 1)) {
-//         // count = Math.round(count);
-//         $(this).append('<div class="weekHours">' + count + '</div>');
-//         count = 0;
-//       }
-//     });
-//   });
-// }
+            var hStr = $(this).text().trim();
+
+            if ($c[index].classList.contains('holiday')) {
+                weekHours -= 7.8
+            }
+
+            if (hStr !== "") {
+                var h = parseFloat(hStr);
+                if (!isNaN(h)) {
+                    count += h;
+                }
+            }
+            
+            --numDay;
+
+            if (count !== 0 && ($(this).is('.cell-last-day-of-week'))) {
+                if (numDay === 0 && !$(this).find('.weekHours').length) {
+                    count = Math.round(count);
+                    $(this).append('<div class="weekHours">'+count+'<span class="onWeekHours"> / '+Math.round(weekHours)+'</span></div>');
+                }
+                count = 0;
+                weekHours = 39;
+                numDay = 7;
+            } 
+
+        })
+        
+    }
+
+    function startShowWeeklyHours() {
+        timeout = setTimeout(function() {
+            if (timeout !== null) {
+                clearTimeout(timeout)
+            }
+            showWeeklyHours()
+            timeout = null
+        }, 300)
+    }
+    
+    function init() {
+        $tempoTableContainer.bind("DOMSubtreeModified", function() {
+            startShowWeeklyHours();
+        })
+        
+        startShowWeeklyHours();
+    }
+    
+    init();
+}
