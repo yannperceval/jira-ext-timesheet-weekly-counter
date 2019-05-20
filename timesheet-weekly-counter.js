@@ -93,7 +93,7 @@ $( document ).ready(function() {
             }
 
             function init() {
-                $tempoTableContainer.find('.fixedDataTableRowLayout_rowWrapper:not(:last-child)').bind("DOMSubtreeModified", function() {
+                $tempoTableContainer.find('*:not(.weekHours)').bind("DOMSubtreeModified", function() {
                     startShowWeeklyHours();
                 })
 
