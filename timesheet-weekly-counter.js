@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Jira extension: timesheet weekly counter
-// @version      0.5
+// @version      0.6
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yroseau)
 // @copyright    2019, Yann Roseau (https://github.com/yroseau)
@@ -66,6 +66,8 @@ $( document ).ready(function() {
                 let numDay = 7
                 let initialWeekHours = 39
                 let weekHours = initialWeekHours
+                
+                $tempoTableContainer.find('.weekHours').remove()
 
                 $cells.each(function(index) {
 
@@ -89,11 +91,11 @@ $( document ).ready(function() {
                             // display or update count
                             count = Math.round(count * 10) / 10 // round first number after dot
                             weekHours = Math.round(weekHours * 10) / 10 // round first number after dot
-                            if (!$(this).find('.weekHours').length) {
+                            // if (!$(this).find('.weekHours').length) {
                                 $(this).append('<div class="weekHours"><div class="progressBar"></div><span class="hourCount">' + count + '</span><span class="onWeekHours"> / ' + weekHours + '</span></div>')
-                            } else {
-                                $(this).find('.hourCount').text(count)
-                            }
+                            // } else {
+                            //     $(this).find('.hourCount').text(count)
+                            // }
                             
                             // update percent
                             let percent = Math.ceil(count*100/weekHours)
