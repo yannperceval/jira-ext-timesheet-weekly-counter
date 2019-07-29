@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Jira extension: timesheet weekly counter
-// @version      0.4
+// @version      0.5
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yroseau)
-// @copyright    2018, Yann Roseau (https://github.com/yroseau)
+// @copyright    2019, Yann Roseau (https://github.com/yroseau)
 // @license      MIT; https://github.com/yroseau/jira-extension/blob/master/LICENSE
 // @include      https://jira*.kaliop.net/*
 // @grant        none
@@ -14,16 +14,24 @@
 
 $( document ).ready(function() {
     
-    // setTimeout == j'ai honte.. mais vraiment pas le temps
-    setTimeout(function() {
+    let max_try = 10
+    
+    // setInterval == j'ai honte.. mais vraiment pas le temps
+    let interval = setInterval(function() {
 
-        var $tempoTableContainer = $('.tempo-report-container');
+        let $tempoTableContainer = $('.tempo-report-container')
+
+        if (--max_try === 0) {
+            clearInterval(interval)
+        }
 
         if ($tempoTableContainer.length) {
+            
+            clearInterval(interval)
 
             $('body').append('<style>\
                 .weekHours { \
-                  background-color: #3b73af; \
+                  background-color: #598ec7; \
                   color: white; \
                   font-size: 0.75em; \
                   position:absolute; \
@@ -34,48 +42,66 @@ $( document ).ready(function() {
                   top: 0; \
                   line-height: 3em; \
                   padding: auto; \
+                  width: 200% !important; \
                 } \
                 .onWeekHours { \
                   opacity: 0.6 \
                 } \
-            </style>');
+                .progressBar { \
+                    background-color: #00000015; \
+                    height: 100%; \
+                    max-width: 100%; \
+                    position: absolute; \
+                } \
+            </style>')
 
-            var timeout = null
+            let timeout = null
 
             function showWeeklyHours() {
 
-                var $cells = $tempoTableContainer.find('.public_fixedDataTable_footer .grid-cell');
-                var $c = $tempoTableContainer.find('.public_fixedDataTable_bodyRow .day-cell')
+                let $cells = $tempoTableContainer.find('.public_fixedDataTable_footer .grid-cell')
+                let $c = $tempoTableContainer.find('.public_fixedDataTable_bodyRow .day-cell')
 
-                var count = 0;
-                var numDay = 7;
-                var weekHours = 39;
+                let count = 0
+                let numDay = 7
+                let initialWeekHours = 39
+                let weekHours = initialWeekHours
 
                 $cells.each(function(index) {
 
-                    var hStr = $(this).text().trim();
+                    let hStr = $(this).find('.tempo-footer-cell').text().trim();
 
                     if ($c[index].classList.contains('holiday')) {
-                        weekHours -= 7.8
+                        weekHours -= initialWeekHours / 5
                     }
 
                     if (hStr !== "") {
-                        var h = parseFloat(hStr);
+                        let h = parseFloat(hStr);
                         if (!isNaN(h)) {
-                            count += h;
+                            count += h
                         }
                     }
 
-                    --numDay;
+                    --numDay
 
                     if (count !== 0 && ($(this).is('.cell-last-day-of-week'))) {
-                        if (numDay === 0 && !$(this).find('.weekHours').length) {
-                            count = Math.round(count);
-                            $(this).append('<div class="weekHours">'+count+'<span class="onWeekHours"> / '+Math.round(weekHours)+'</span></div>');
+                        if (numDay === 0) {
+                            // display or update count
+                            count = Math.round(count * 10) / 10 // round first number after dot
+                            weekHours = Math.round(weekHours * 10) / 10 // round first number after dot
+                            if (!$(this).find('.weekHours').length) {
+                                $(this).append('<div class="weekHours"><div class="progressBar"></div><span class="hourCount">' + count + '</span><span class="onWeekHours"> / ' + weekHours + '</span></div>')
+                            } else {
+                                $(this).find('.hourCount').text(count)
+                            }
+                            
+                            // update percent
+                            let percent = Math.ceil(count*100/weekHours)
+                            $(this).find('.progressBar').width(percent + '%');
                         }
-                        count = 0;
-                        weekHours = 39;
-                        numDay = 7;
+                        count = 0
+                        weekHours = initialWeekHours
+                        numDay = 7
                     }
 
                 })
@@ -83,25 +109,24 @@ $( document ).ready(function() {
             }
 
             function startShowWeeklyHours() {
-                timeout = setTimeout(function() {
-                    if (timeout !== null) {
-                        clearTimeout(timeout)
-                    }
-                    showWeeklyHours()
+                if (timeout !== null) {
+                    clearTimeout(timeout)
                     timeout = null
-                }, 300)
+                }
+                timeout = setTimeout(function() {
+                    showWeeklyHours()
+                }, 500)
             }
 
             function init() {
-                $tempoTableContainer.find('*:not(.weekHours)').bind("DOMSubtreeModified", function() {
-                    startShowWeeklyHours();
+                $tempoTableContainer.on('DOMSubtreeModified', '.fixedDataTableRowLayout_rowWrapper:not(:last-child), .tempo-footer-cell', function() {
+                    startShowWeeklyHours()
                 })
-
-                startShowWeeklyHours();
+                startShowWeeklyHours()
             }
 
-            init();
+            init()
         }
 
-    }, 1000)
+    }, 500)
 })
