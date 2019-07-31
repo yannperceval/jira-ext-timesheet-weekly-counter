@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Jira extension: timesheet weekly counter
-// @version      0.6
+// @version      0.7
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yroseau)
 // @copyright    2019, Yann Roseau (https://github.com/yroseau)
@@ -43,9 +43,15 @@ $( document ).ready(function() {
                   line-height: 3em; \
                   padding: auto; \
                   width: 200% !important; \
+                  transition: all .3s ease-out .5s;\
                 } \
                 .onWeekHours { \
-                  opacity: 0.6 \
+                  opacity: 0.6; \
+                } \
+                .fixedDataTableCellGroupLayout_cellGroupWrapper:hover .weekHours { \
+                    opacity: 0; \
+                    height: 0; \
+                    overflow: hidden; \
                 } \
                 .progressBar { \
                     background-color: #00000015; \
