@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Jira extension: timesheet weekly counter
-// @version      0.7
+// @version      0.8
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yroseau)
 // @copyright    2019, Yann Roseau (https://github.com/yroseau)
