@@ -13,9 +13,9 @@
 // ==/UserScript==
 
 $( document ).ready(function() {
-    
+
     let max_try = 10
-    
+
     // setInterval == j'ai honte.. mais vraiment pas le temps
     let interval = setInterval(function() {
 
@@ -26,7 +26,7 @@ $( document ).ready(function() {
         }
 
         if ($tempoTableContainer.length) {
-            
+
             clearInterval(interval)
 
             $('body').append('<style>\
@@ -92,8 +92,8 @@ $( document ).ready(function() {
 
                     --numDay
 
-                    if (count !== 0 && ($(this).is('.cell-last-day-of-week'))) {
-                        if (numDay === 0) {
+                    if (($(this).is('.cell-last-day-of-week'))) {
+                        if (numDay === 0 && count !== 0) {
                             // display or update count
                             count = Math.round(count * 10) / 10 // round first number after dot
                             weekHours = Math.round(weekHours * 10) / 10 // round first number after dot
