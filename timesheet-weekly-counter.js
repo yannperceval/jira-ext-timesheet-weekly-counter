@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Jira extension: timesheet weekly counter
-// @version      0.8
+// @version      0.9
 // @description  Show a counter by project by week
 // @author       Yann Roseau (https://github.com/yroseau)
 // @copyright    2019, Yann Roseau (https://github.com/yroseau)
@@ -71,6 +71,15 @@ $( document ).ready(function() {
                 let count = 0
                 let numDay = 7
                 let initialWeekHours = 39
+                let weekDayHours = [
+                    8,
+                    8,
+                    8,
+                    8,
+                    7,
+                    0,
+                    0,
+                ]
                 let weekHours = initialWeekHours
                 
                 $tempoTableContainer.find('.weekHours').remove()
@@ -80,7 +89,7 @@ $( document ).ready(function() {
                     let hStr = $(this).find('.tempo-footer-cell').text().trim();
 
                     if ($c[index].classList.contains('holiday')) {
-                        weekHours -= initialWeekHours / 5
+                        weekHours -= weekDayHours[7 - numDay]
                     }
 
                     if (hStr !== "") {
@@ -96,7 +105,7 @@ $( document ).ready(function() {
                         if (numDay === 0 && count !== 0) {
                             // display or update count
                             count = Math.round(count * 10) / 10 // round first number after dot
-                            weekHours = Math.round(weekHours * 10) / 10 // round first number after dot
+                            weekHours = Math.round(weekHours * 100) / 100 // round 2 numbers after dot
                             // if (!$(this).find('.weekHours').length) {
                                 $(this).append('<div class="weekHours"><div class="progressBar"></div><span class="hourCount">' + count + '</span><span class="onWeekHours"> / ' + weekHours + '</span></div>')
                             // } else {
